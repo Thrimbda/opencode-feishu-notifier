@@ -23,6 +23,7 @@
 - 支持从环境变量或 feishu-notifier.json 读取配置
 - 新增 debug 日志输出（配置来源/事件/发送结果）
 - 移除飞书 setup CLI，改为仅通过配置文件/环境变量
+- 调整 package.json 以发布源码并使用 bun 作为引擎
 
 
 ### 🟡 进行中
@@ -54,6 +55,7 @@
 | 插件配置从 opencode.json 的 feishuNotifier 字段读取 | 用户要求移除环境变量依赖，集中在 opencode 配置文件中 | 保留环境变量作为 fallback 或使用独立配置文件 | 2026-01-14 |
 | 配置文件从 opencode.json 迁移为 feishu-notifier.json，避免 opencode 配置校验失败 | opencode.json 不允许未知字段 | 仅保留环境变量或使用项目级 .opencode/feishu-notifier.json | 2026-01-14 |
 | 移除 npm bin setup CLI，避免额外发布入口 | 用户要求仅保留插件与配置文件，不再提供 CLI | 保留 CLI 作为可选命令 | 2026-01-14 |
+| 发布 TypeScript 源码并声明 bun 引擎 | 匹配用户期望与社区插件模式（无需构建产物） | 继续发布 dist 构建产物 | 2026-01-14 |
 
 ---
 
@@ -72,4 +74,4 @@
 
 ---
 
-*最后更新: 2026-01-14 16:41 by Claude*
+*最后更新: 2026-01-14 16:59 by Claude*
