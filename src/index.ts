@@ -1,81 +1,91 @@
-import type { Plugin } from "@opencode-ai/plugin"
-import { loadConfigWithSource } from "./config"
-import { mapEventToNotification } from "./hooks"
-import { buildNotification } from "./feishu/messages"
-import { sendTextMessage } from "./feishu/client"
+import type { Plugin } from "@opencode-ai/plugin";
+import { loadConfigWithSource } from "./config";
+import { sendTextMessage } from "./feishu/client";
+import { buildNotification } from "./feishu/messages";
+import { mapEventToNotification } from "./hooks";
 
-const serviceName = "opencode-feishu-notifier"
+const serviceName = "opencode-feishu-notifier";
 
 export const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
-  let configCache: ReturnType<typeof loadConfigWithSource> | null = null
-  let configError: Error | null = null
+  let configCache: ReturnType<typeof loadConfigWithSource> | null = null;
+  let configError: Error | null = null;
 
-  const log = (level: "debug" | "info" | "warn" | "error", message: string, extra?: Record<string, unknown>) => {
+  const log = (
+    level: "debug" | "info" | "warn" | "error",
+    message: string,
+    extra?: Record<string, unknown>
+  ) => {
     const payload = {
       body: {
         service: serviceName,
         level,
         message,
-        extra
-      }
-    }
-    void client.app.log(payload).catch(() => undefined)
-  }
+        extra,
+      },
+    };
+    void client.app.log(payload).catch(() => undefined);
+  };
 
   const logDebug = (message: string, extra?: Record<string, unknown>) => {
-    log("debug", message, extra)
-  }
+    log("debug", message, extra);
+  };
 
   const logError = (message: string, extra?: Record<string, unknown>) => {
-    log("error", message, extra)
-  }
+    log("error", message, extra);
+  };
 
   const ensureConfig = () => {
     if (configCache || configError) {
-      return
+      return;
     }
 
     try {
-      configCache = loadConfigWithSource({ directory })
-      logDebug("Loaded Feishu config", { sources: configCache.sources })
+      configCache = loadConfigWithSource({ directory });
+      logDebug("Loaded Feishu config", { sources: configCache.sources });
     } catch (error) {
-      configError = error instanceof Error ? error : new Error(String(error))
-      logError("Feishu config error", { error: configError.message })
+      configError = error instanceof Error ? error : new Error(String(error));
+      logError("Feishu config error", { error: configError.message });
     }
-  }
+  };
 
-  log("info", "Feishu notifier plugin initialized")
-  ensureConfig()
+  log("info", "Feishu notifier plugin initialized");
+  ensureConfig();
 
   return {
     event: async ({ event }) => {
-      logDebug("Event received", { eventType: event.type })
+      logDebug("Event received", { eventType: event.type });
 
-      const notificationType = mapEventToNotification(event.type)
+      const notificationType = mapEventToNotification(event.type);
       if (!notificationType) {
-        logDebug("Event ignored", { eventType: event.type })
-        return
+        logDebug("Event ignored", { eventType: event.type });
+        return;
       }
+      logDebug("Event mapped to notification", {
+        eventType: event.type,
+        notificationType,
+      });
 
-      ensureConfig()
+      ensureConfig();
       if (!configCache) {
-        return
+        return;
       }
 
-      const { text } = buildNotification(notificationType, event)
+      const { text } = buildNotification(notificationType, event);
       logDebug("Sending Feishu notification", {
         eventType: event.type,
-        notificationType
-      })
+        notificationType,
+      });
 
       try {
-        const response = await sendTextMessage(configCache.config, text)
+        const response = await sendTextMessage(configCache.config, text);
         logDebug("Feishu notification sent", {
-          messageId: response.data?.message_id ?? null
-        })
+          messageId: response.data?.message_id ?? null,
+        });
       } catch (error) {
-        logError("Failed to send Feishu notification", { error: String(error) })
+        logError("Failed to send Feishu notification", {
+          error: String(error),
+        });
       }
-    }
-  }
-}
+    },
+  };
+};
