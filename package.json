@@ -7,6 +7,9 @@
   "files": [
     "src"
   ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "@opencode-ai/plugin": "^1.0.0"
   },
