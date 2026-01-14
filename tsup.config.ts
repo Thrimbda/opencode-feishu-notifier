@@ -6,5 +6,8 @@ export default defineConfig({
   target: "es2022",
   dts: true,
   sourcemap: true,
-  clean: true
+  clean: true,
+  banner: {
+    js: "#!/usr/bin/env node"
+  }
 })

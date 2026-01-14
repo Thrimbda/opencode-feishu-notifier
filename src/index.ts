@@ -4,8 +4,8 @@ import { mapEventToNotification } from "./hooks"
 import { buildNotification } from "./feishu/messages"
 import { sendTextMessage } from "./feishu/client"
 
-export const FeishuNotifierPlugin: Plugin = async ({ client }) => {
-  const config = loadConfig()
+export const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
+  const config = loadConfig({ directory })
 
   await client.app.log({
     body: {

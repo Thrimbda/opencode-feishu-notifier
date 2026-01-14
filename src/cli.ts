@@ -4,7 +4,7 @@ import { sendTextMessage } from "./feishu/client"
 
 async function main(): Promise<void> {
   try {
-    const config = loadConfig()
+    const config = loadConfig({ directory: process.cwd() })
     const { text } = buildNotification("setup_test")
     await sendTextMessage(config, text)
     console.log("Feishu setup successful.")

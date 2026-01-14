@@ -30,3 +30,8 @@
 2026-01-14T07:10:34.246Z,legion_update_tasks,opencode-feishu-plugin,opencode-feishu-plugin,Claude,completeTask: phase 3,success
 2026-01-14T07:10:37.851Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: .github/workflows/release.yml,success
 2026-01-14T07:36:06.176Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: .gitignore,success
+2026-01-14T07:57:42.935Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: scripts/setup.sh,success
+2026-01-14T07:59:50.126Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addDecision: 使用 tsup banner 添加 shebang 以支持 npm bin 执行,success
+2026-01-14T08:08:50.559Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addDecision: 插件配置从 opencode.json 的 feishuNotifier 字段读取,success
+2026-01-14T08:10:28.021Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: scripts/setup.mjs,success
+2026-01-14T08:11:04.479Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: scripts/setup.sh,success
