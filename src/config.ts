@@ -16,6 +16,10 @@ export interface LoadConfigOptions {
   configPath?: string
 }
 
+export type ConfigSource =
+  | { type: "file"; detail: string }
+  | { type: "env"; detail: string }
+
 const receiverTypes: ReceiverType[] = ["user_id", "open_id", "chat_id"]
 
 function getConfigPaths(options: LoadConfigOptions): string[] {
@@ -59,10 +63,13 @@ function readEnvConfig(): Partial<FeishuConfig> {
   }
 }
 
-export function loadConfig(options: LoadConfigOptions = {}): FeishuConfig {
+function resolveConfig(options: LoadConfigOptions): {
+  mergedConfig: Partial<FeishuConfig>
+  sources: ConfigSource[]
+} {
   const configPaths = getConfigPaths(options)
   let mergedConfig: Partial<FeishuConfig> = {}
-  let sawConfig = false
+  const sources: ConfigSource[] = []
 
   for (const configPath of configPaths) {
     const config = readConfigFile(configPath)
@@ -71,7 +78,7 @@ export function loadConfig(options: LoadConfigOptions = {}): FeishuConfig {
         ...mergedConfig,
         ...config
       }
-      sawConfig = true
+      sources.push({ type: "file", detail: configPath })
     }
   }
 
@@ -81,10 +88,14 @@ export function loadConfig(options: LoadConfigOptions = {}): FeishuConfig {
       ...mergedConfig,
       ...envConfig
     }
-    sawConfig = true
+    sources.push({ type: "env", detail: "FEISHU_*" })
   }
 
-  if (!sawConfig) {
+  return { mergedConfig, sources }
+}
+
+function finalizeConfig(mergedConfig: Partial<FeishuConfig>, sources: ConfigSource[]): FeishuConfig {
+  if (sources.length === 0) {
     throw new Error(
       "Missing Feishu configuration. Use FEISHU_* environment variables or create feishu-notifier.json."
     )
@@ -112,5 +123,19 @@ export function loadConfig(options: LoadConfigOptions = {}): FeishuConfig {
     appSecret: mergedConfig.appSecret!,
     receiverType,
     receiverId: mergedConfig.receiverId!
+  }
+}
+
+export function loadConfig(options: LoadConfigOptions = {}): FeishuConfig {
+  return loadConfigWithSource(options).config
+}
+
+export function loadConfigWithSource(
+  options: LoadConfigOptions = {}
+): { config: FeishuConfig; sources: ConfigSource[] } {
+  const { mergedConfig, sources } = resolveConfig(options)
+  return {
+    config: finalizeConfig(mergedConfig, sources),
+    sources
   }
 }

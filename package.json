@@ -1,14 +1,11 @@
 {
   "name": "opencode-feishu-notifier",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "OpenCode plugin for Feishu notifications",
   "type": "module",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"
-  },
-  "bin": {
-    "opencode-feishu-setup": "dist/cli.js"
   },
   "files": [
     "dist"

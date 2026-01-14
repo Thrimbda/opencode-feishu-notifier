@@ -36,3 +36,5 @@
 2026-01-14T08:10:28.021Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: scripts/setup.mjs,success
 2026-01-14T08:11:04.479Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: scripts/setup.sh,success
 2026-01-14T08:23:54.758Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addDecision: 配置文件从 opencode.json 迁移为 feishu-notifier.json，避免 opencode 配置校验失败,success
+2026-01-14T08:38:56.910Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,progress.completed: 新增 debug 日志输出（配置来源/事件/发送结果）,success
+2026-01-14T08:41:57.808Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addDecision: 移除 npm bin setup CLI，避免额外发布入口,success

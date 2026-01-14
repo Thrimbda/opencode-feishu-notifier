@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import fs from "node:fs"
 import path from "node:path"
-import { execFileSync } from "node:child_process"
 
 const pluginName = "opencode-feishu-notifier"
 const configDir = path.join(
@@ -68,6 +67,6 @@ if (missing.length > 0) {
   process.exit(1)
 }
 
-execFileSync("npx", ["--yes", "opencode-feishu-setup"], { stdio: "inherit" })
 console.log(`Plugin configured in ${opencodeConfigFile}`)
+console.log(`Feishu config source: ${notifierConfigFile} or FEISHU_* env vars`)
 
