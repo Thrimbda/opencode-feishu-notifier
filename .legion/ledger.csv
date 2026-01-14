@@ -1,0 +1,32 @@
+﻿timestamp,action,task_id,task_name,user,params_summary,result
+2026-01-13T08:49:14.228Z,legion_init,,,Claude,workingDirectory: /Users/c1/Work/opencode-feishu-notifier,success
+2026-01-13T08:49:23.427Z,legion_propose_task,,,Claude,name: opencode-feishu-plugin,success
+2026-01-13T08:53:04.104Z,legion_approve_proposal,opencode-feishu-plugin,opencode-feishu-plugin,Claude,proposalId: proposal-mkccoste-74d57a,success
+2026-01-13T08:55:54.472Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addDecision: 以 MCP Server 形式实现 opencode 插件，通过 `notify` 工具被 opencode 调用发送飞书通知,success
+2026-01-13T09:13:54.712Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,progress.completed: 澄清初版设计方案（MCP 方案）并等待确认,success
+2026-01-13T09:30:44.931Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addDecision: 改用 opencode 插件 hook 机制实现通知逻辑,success
+2026-01-13T09:32:11.097Z,legion_update_tasks,opencode-feishu-plugin,opencode-feishu-plugin,Claude,completeTask: phase 1,success
+2026-01-13T09:32:14.837Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,progress.completed: 确认插件机制与事件映射,success
+2026-01-13T09:33:57.378Z,legion_update_tasks,opencode-feishu-plugin,opencode-feishu-plugin,Claude,completeTask: phase 2,success
+2026-01-13T09:34:09.732Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: package.json,success
+2026-01-13T09:34:09.984Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: tsconfig.json,success
+2026-01-13T09:34:10.312Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: tsup.config.ts,success
+2026-01-13T09:34:10.671Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: src/config.ts,success
+2026-01-13T09:34:11.019Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: src/feishu/client.ts,success
+2026-01-13T09:34:11.312Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: src/feishu/messages.ts,success
+2026-01-13T09:34:11.775Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: src/hooks.ts,success
+2026-01-13T09:34:12.101Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: src/index.ts,success
+2026-01-13T09:34:12.662Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: src/cli.ts,success
+2026-01-13T09:34:16.328Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,progress.completed: 搭建 TS 项目与构建配置,success
+2026-01-13T09:34:20.442Z,legion_update_tasks,opencode-feishu-plugin,opencode-feishu-plugin,Claude,completeTask: phase 2,success
+2026-01-13T09:34:24.613Z,legion_update_tasks,opencode-feishu-plugin,opencode-feishu-plugin,Claude,completeTask: phase 2,success
+2026-01-13T09:34:30.173Z,legion_update_tasks,opencode-feishu-plugin,opencode-feishu-plugin,Claude,completeTask: phase 2,success
+2026-01-13T09:34:45.454Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,handoff: 运行 `npm install` 后执行 `npm run build` 生成 dist 文件,success
+2026-01-13T09:34:48.322Z,legion_update_tasks,opencode-feishu-plugin,opencode-feishu-plugin,Claude,completeTask: phase 3,success
+2026-01-14T06:25:27.937Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: scripts/setup.sh,success
+2026-01-14T06:29:22.277Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addDecision: 使用 client.app.log 的 body 结构以匹配 SDK 类型,success
+2026-01-14T07:06:16.183Z,legion_update_plan,opencode-feishu-plugin,opencode-feishu-plugin,Claude,,success
+2026-01-14T07:10:30.505Z,legion_update_tasks,opencode-feishu-plugin,opencode-feishu-plugin,Claude,setCurrentTask: phase 3,success
+2026-01-14T07:10:34.246Z,legion_update_tasks,opencode-feishu-plugin,opencode-feishu-plugin,Claude,completeTask: phase 3,success
+2026-01-14T07:10:37.851Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: .github/workflows/release.yml,success
+2026-01-14T07:36:06.176Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: .gitignore,success

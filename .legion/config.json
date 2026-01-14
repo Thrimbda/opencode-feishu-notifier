@@ -1,0 +1,85 @@
+{
+  "version": "1.0.0",
+  "currentTask": "opencode-feishu-plugin",
+  "settings": {
+    "autoRemind": true,
+    "remindBeforeReset": true,
+    "taskCreationPolicy": "agent-with-approval"
+  },
+  "tasks": [
+    {
+      "id": "opencode-feishu-plugin",
+      "name": "opencode-feishu-plugin",
+      "status": "active",
+      "createdAt": "2026-01-13T08:53:04.101Z",
+      "updatedAt": "2026-01-14T07:36:06.175Z"
+    }
+  ],
+  "pendingProposals": [
+    {
+      "id": "proposal-mkccoste-74d57a",
+      "name": "opencode-feishu-plugin",
+      "goal": "实现一个 opencode 插件（TS 项目），支持配置飞书 app_id/app_secret，setup 后在需要用户交互时发送飞书通知",
+      "rationale": "用户需要通过飞书消息接收 opencode 的交互提示，减少手动关注终端",
+      "points": [
+        "生成 TypeScript 项目结构与构建配置",
+        "实现插件配置与 setup 流程（存储 app_id/app_secret）",
+        "实现 Feishu 消息发送客户端与错误处理",
+        "在 opencode 交互触发点挂接通知逻辑",
+        "提供基本使用说明（非文档文件）"
+      ],
+      "scope": [
+        "(待定) 插件源码目录",
+        "(待定) opencode 插件入口/注册逻辑",
+        "(待定) 配置与环境读取模块"
+      ],
+      "phases": [
+        {
+          "name": "设计与确认",
+          "tasks": [
+            {
+              "description": "澄清 opencode 插件结构与钩子位置",
+              "acceptance": "确认目标目录与交互触发点位置"
+            }
+          ]
+        },
+        {
+          "name": "实现",
+          "tasks": [
+            {
+              "description": "初始化 TS 项目与依赖",
+              "acceptance": "能编译并生成可用插件入口"
+            },
+            {
+              "description": "实现飞书鉴权与消息发送",
+              "acceptance": "发送接口可被调用并返回结果"
+            },
+            {
+              "description": "实现 setup 与配置持久化",
+              "acceptance": "能通过 app_id/app_secret 完成 setup"
+            },
+            {
+              "description": "接入交互触发通知",
+              "acceptance": "交互触发时调用通知逻辑"
+            }
+          ]
+        },
+        {
+          "name": "收尾",
+          "tasks": [
+            {
+              "description": "自检与交接说明",
+              "acceptance": "记录使用方式与下一步"
+            }
+          ]
+        }
+      ],
+      "proposedBy": "Claude",
+      "proposedAt": "2026-01-13T08:49:23.426Z",
+      "status": "approved",
+      "decidedAt": "2026-01-13T08:53:04.101Z",
+      "decidedBy": "Claude",
+      "createdTaskId": "opencode-feishu-plugin"
+    }
+  ]
+}

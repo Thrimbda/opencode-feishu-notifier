@@ -1,0 +1,63 @@
+# opencode-feishu-plugin - 上下文
+
+## 会话进展 (2026-01-13)
+
+### ✅ 已完成
+
+- 澄清初版设计方案（MCP 方案）并等待确认
+- 确认插件机制与事件映射
+- 设计方案获确认，进入实现阶段
+- 搭建 TS 项目与构建配置
+- 实现飞书鉴权与消息发送
+- 实现 setup 命令发送测试消息
+- 实现事件 hook 通知逻辑
+- 新增自动 setup 脚本用于构建与安装插件
+- 修复 client.app.log 调用签名，构建成功
+- 新增 GitHub Actions 发布流程（OIDC Trusted Publishers）
+- 新增 .gitignore 用于 Node.js/TypeScript 项目
+
+
+### 🟡 进行中
+
+(暂无)
+
+
+### ⚠️ 阻塞/待定
+
+(暂无)
+
+
+---
+
+## 关键文件
+
+(暂无)
+
+---
+
+## 关键决策
+
+| 决策 | 原因 | 替代方案 | 日期 |
+|------|------|----------|------|
+| 以 MCP Server 形式实现 opencode 插件，通过 `notify` 工具被 opencode 调用发送飞书通知 | opencode 配置仅支持外部 MCP Server 扩展，适合独立 npm 包实现 | 直接修改 opencode 源码注入通知逻辑；制作包装器监听日志触发通知 | 2026-01-13 |
+| 改用 opencode 插件 hook 机制实现通知逻辑 | 官方插件支持事件 hook，满足需求且比 MCP Server 更轻量 | 继续使用 MCP Server 提供 notify 工具；在 opencode 源码中硬编码通知 | 2026-01-13 |
+| 使用 client.app.log 的 body 结构以匹配 SDK 类型 | SDK 类型 AppLogData 需要 body 字段 | 关闭 DTS 生成或改用 console.log | 2026-01-14 |
+
+---
+
+## 快速交接
+
+**下次继续从这里开始：**
+
+1. 运行 `npm install` 后执行 `npm run build` 生成 dist 文件
+2. 在 opencode 配置中加入插件包或拷贝 `dist/index.js` 到 `.opencode/plugin/`
+3. 设置环境变量并运行 `opencode-feishu-setup` 发送测试消息
+
+**注意事项：**
+
+- 插件会在 `permission.updated`/`tui.prompt.append`/`tui.command.execute`/`tui.toast.show` 事件触发时发送通知
+- 缺少环境变量会导致插件初始化报错
+
+---
+
+*最后更新: 2026-01-14 15:36 by Claude*
