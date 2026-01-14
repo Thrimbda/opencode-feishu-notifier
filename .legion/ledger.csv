@@ -40,3 +40,4 @@
 2026-01-14T08:41:57.808Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addDecision: 移除 npm bin setup CLI，避免额外发布入口,success
 2026-01-14T08:59:50.298Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addDecision: 发布 TypeScript 源码并声明 bun 引擎,success
 2026-01-14T09:02:39.109Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: .github/workflows/release.yml,success
+2026-01-14T09:08:23.861Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,progress.completed: CI 触发方式改回 push master，并加入版本检查跳过发布,success
