@@ -2,8 +2,8 @@ name: Publish to npm
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - master
 
 permissions:
   contents: read
@@ -29,5 +29,19 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Check npm version
+        id: version
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          PUBLISHED_VERSION=$(npm view opencode-feishu-notifier version || echo "")
+          echo "package_version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "published_version=$PUBLISHED_VERSION" >> "$GITHUB_OUTPUT"
+          if [ "$PACKAGE_VERSION" = "$PUBLISHED_VERSION" ]; then
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Publish
+        if: steps.version.outputs.should_publish == 'true'
         run: npm publish --access public
