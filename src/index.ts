@@ -60,7 +60,7 @@ export const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
         logDebug("Event ignored", { eventType: event.type });
         return;
       }
-      logDebug("Event mapped to notification", {
+      log("info", "Event mapped to notification", {
         eventType: event.type,
         notificationType,
       });
