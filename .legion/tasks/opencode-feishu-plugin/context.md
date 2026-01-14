@@ -26,6 +26,7 @@
 - 调整 package.json 以发布源码并使用 bun 作为引擎
 - 调整 release workflow 使用 bun + Trusted Publishers 并添加 typecheck 脚本
 - CI 触发方式改回 push master，并加入版本检查跳过发布
+- 改为懒加载配置并避免插件初始化抛错/阻塞
 
 
 ### 🟡 进行中
@@ -58,6 +59,7 @@
 | 配置文件从 opencode.json 迁移为 feishu-notifier.json，避免 opencode 配置校验失败 | opencode.json 不允许未知字段 | 仅保留环境变量或使用项目级 .opencode/feishu-notifier.json | 2026-01-14 |
 | 移除 npm bin setup CLI，避免额外发布入口 | 用户要求仅保留插件与配置文件，不再提供 CLI | 保留 CLI 作为可选命令 | 2026-01-14 |
 | 发布 TypeScript 源码并声明 bun 引擎 | 匹配用户期望与社区插件模式（无需构建产物） | 继续发布 dist 构建产物 | 2026-01-14 |
+| 日志发送改为 fire-and-forget，配置错误不再抛出阻塞 opencode 启动 | 避免插件初始化阶段阻塞 TUI 启动 | 保留抛错并要求配置完整 | 2026-01-14 |
 
 ---
 
@@ -76,4 +78,4 @@
 
 ---
 
-*最后更新: 2026-01-14 17:08 by Claude*
+*最后更新: 2026-01-14 17:15 by Claude*

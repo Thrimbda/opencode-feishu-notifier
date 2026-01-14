@@ -7,62 +7,74 @@ import { sendTextMessage } from "./feishu/client"
 const serviceName = "opencode-feishu-notifier"
 
 export const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
-  const { config, sources } = loadConfigWithSource({ directory })
+  let configCache: ReturnType<typeof loadConfigWithSource> | null = null
+  let configError: Error | null = null
 
-  const logDebug = async (message: string, extra?: Record<string, unknown>) => {
-    await client.app.log({
+  const log = (level: "debug" | "info" | "warn" | "error", message: string, extra?: Record<string, unknown>) => {
+    const payload = {
       body: {
         service: serviceName,
-        level: "debug",
+        level,
         message,
         extra
       }
-    })
+    }
+    void client.app.log(payload).catch(() => undefined)
   }
 
-  await client.app.log({
-    body: {
-      service: serviceName,
-      level: "info",
-      message: "Feishu notifier plugin initialized"
-    }
-  })
+  const logDebug = (message: string, extra?: Record<string, unknown>) => {
+    log("debug", message, extra)
+  }
 
-  await logDebug("Loaded Feishu config", { sources })
+  const logError = (message: string, extra?: Record<string, unknown>) => {
+    log("error", message, extra)
+  }
+
+  const ensureConfig = () => {
+    if (configCache || configError) {
+      return
+    }
+
+    try {
+      configCache = loadConfigWithSource({ directory })
+      logDebug("Loaded Feishu config", { sources: configCache.sources })
+    } catch (error) {
+      configError = error instanceof Error ? error : new Error(String(error))
+      logError("Feishu config error", { error: configError.message })
+    }
+  }
+
+  log("info", "Feishu notifier plugin initialized")
+  ensureConfig()
 
   return {
     event: async ({ event }) => {
-      await logDebug("Event received", { eventType: event.type })
+      logDebug("Event received", { eventType: event.type })
 
       const notificationType = mapEventToNotification(event.type)
       if (!notificationType) {
-        await logDebug("Event ignored", { eventType: event.type })
+        logDebug("Event ignored", { eventType: event.type })
+        return
+      }
+
+      ensureConfig()
+      if (!configCache) {
         return
       }
 
       const { text } = buildNotification(notificationType, event)
-      await logDebug("Sending Feishu notification", {
+      logDebug("Sending Feishu notification", {
         eventType: event.type,
         notificationType
       })
 
       try {
-        const response = await sendTextMessage(config, text)
-        await logDebug("Feishu notification sent", {
+        const response = await sendTextMessage(configCache.config, text)
+        logDebug("Feishu notification sent", {
           messageId: response.data?.message_id ?? null
         })
       } catch (error) {
-        await client.app.log({
-          body: {
-            service: serviceName,
-            level: "error",
-            message: "Failed to send Feishu notification",
-            extra: {
-              error: String(error)
-            }
-          }
-        })
-        throw error
+        logError("Failed to send Feishu notification", { error: String(error) })
       }
     }
   }
