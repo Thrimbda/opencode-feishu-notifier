@@ -16,10 +16,6 @@ export interface LoadConfigOptions {
   configPath?: string
 }
 
-type OpencodeConfig = {
-  feishuNotifier?: Partial<FeishuConfig>
-}
-
 const receiverTypes: ReceiverType[] = ["user_id", "open_id", "chat_id"]
 
 function getConfigPaths(options: LoadConfigOptions): string[] {
@@ -27,17 +23,17 @@ function getConfigPaths(options: LoadConfigOptions): string[] {
     return [options.configPath]
   }
 
-  const configPaths: string[] = []
+  const paths: string[] = []
   const directory = options.directory ?? process.cwd()
-  configPaths.push(path.join(directory, "opencode.json"))
-
   const xdgConfig = process.env.XDG_CONFIG_HOME ?? path.join(os.homedir(), ".config")
-  configPaths.push(path.join(xdgConfig, "opencode", "opencode.json"))
 
-  return configPaths
+  paths.push(path.join(xdgConfig, "opencode", "feishu-notifier.json"))
+  paths.push(path.join(directory, ".opencode", "feishu-notifier.json"))
+
+  return paths
 }
 
-function readConfigFile(filePath: string): OpencodeConfig | null {
+function readConfigFile(filePath: string): Partial<FeishuConfig> | null {
   if (!fs.existsSync(filePath)) {
     return null
   }
@@ -48,9 +44,18 @@ function readConfigFile(filePath: string): OpencodeConfig | null {
   }
 
   try {
-    return JSON.parse(raw) as OpencodeConfig
+    return JSON.parse(raw) as Partial<FeishuConfig>
   } catch (error) {
     throw new Error(`Invalid JSON in ${filePath}: ${String(error)}`)
+  }
+}
+
+function readEnvConfig(): Partial<FeishuConfig> {
+  return {
+    appId: process.env.FEISHU_APP_ID,
+    appSecret: process.env.FEISHU_APP_SECRET,
+    receiverType: process.env.FEISHU_RECEIVER_TYPE as ReceiverType | undefined,
+    receiverId: process.env.FEISHU_RECEIVER_ID
   }
 }
 
@@ -61,26 +66,35 @@ export function loadConfig(options: LoadConfigOptions = {}): FeishuConfig {
 
   for (const configPath of configPaths) {
     const config = readConfigFile(configPath)
-    if (config?.feishuNotifier) {
+    if (config) {
       mergedConfig = {
         ...mergedConfig,
-        ...config.feishuNotifier
+        ...config
       }
       sawConfig = true
     }
   }
 
+  const envConfig = readEnvConfig()
+  if (envConfig.appId || envConfig.appSecret || envConfig.receiverType || envConfig.receiverId) {
+    mergedConfig = {
+      ...mergedConfig,
+      ...envConfig
+    }
+    sawConfig = true
+  }
+
   if (!sawConfig) {
     throw new Error(
-      "Missing feishuNotifier config in opencode.json (global or project)."
+      "Missing Feishu configuration. Use FEISHU_* environment variables or create feishu-notifier.json."
     )
   }
 
   const missing: string[] = []
-  if (!mergedConfig.appId) missing.push("feishuNotifier.appId")
-  if (!mergedConfig.appSecret) missing.push("feishuNotifier.appSecret")
-  if (!mergedConfig.receiverType) missing.push("feishuNotifier.receiverType")
-  if (!mergedConfig.receiverId) missing.push("feishuNotifier.receiverId")
+  if (!mergedConfig.appId) missing.push("appId")
+  if (!mergedConfig.appSecret) missing.push("appSecret")
+  if (!mergedConfig.receiverType) missing.push("receiverType")
+  if (!mergedConfig.receiverId) missing.push("receiverId")
 
   if (missing.length > 0) {
     throw new Error(`Missing config fields: ${missing.join(", ")}`)

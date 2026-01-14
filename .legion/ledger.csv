@@ -35,3 +35,4 @@
 2026-01-14T08:08:50.559Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addDecision: 插件配置从 opencode.json 的 feishuNotifier 字段读取,success
 2026-01-14T08:10:28.021Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: scripts/setup.mjs,success
 2026-01-14T08:11:04.479Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: scripts/setup.sh,success
+2026-01-14T08:23:54.758Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addDecision: 配置文件从 opencode.json 迁移为 feishu-notifier.json，避免 opencode 配置校验失败,success

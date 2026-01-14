@@ -8,13 +8,14 @@ const configDir = path.join(
   process.env.XDG_CONFIG_HOME ?? path.join(process.env.HOME ?? "", ".config"),
   "opencode"
 )
-const configFile = path.join(configDir, "opencode.json")
+const opencodeConfigFile = path.join(configDir, "opencode.json")
+const notifierConfigFile = path.join(configDir, "feishu-notifier.json")
 
 fs.mkdirSync(configDir, { recursive: true })
 
 let config = {}
-if (fs.existsSync(configFile)) {
-  const raw = fs.readFileSync(configFile, "utf8").trim()
+if (fs.existsSync(opencodeConfigFile)) {
+  const raw = fs.readFileSync(opencodeConfigFile, "utf8").trim()
   if (raw) {
     config = JSON.parse(raw)
   }
@@ -27,25 +28,38 @@ if (!plugins.includes(pluginName)) {
 
 config.plugin = plugins
 
-const notifier = config.feishuNotifier || {}
-const required = ["appId", "appSecret", "receiverType", "receiverId"]
-const missing = required.filter((key) => !notifier[key])
+fs.writeFileSync(opencodeConfigFile, JSON.stringify(config, null, 2) + "\n")
+console.log(`Updated ${opencodeConfigFile} with plugin: ${pluginName}`)
 
-fs.writeFileSync(configFile, JSON.stringify(config, null, 2) + "\n")
-console.log(`Updated ${configFile} with plugin: ${pluginName}`)
+let notifier = {}
+if (fs.existsSync(notifierConfigFile)) {
+  const raw = fs.readFileSync(notifierConfigFile, "utf8").trim()
+  if (raw) {
+    notifier = JSON.parse(raw)
+  }
+}
+
+const resolved = {
+  appId: process.env.FEISHU_APP_ID ?? notifier.appId,
+  appSecret: process.env.FEISHU_APP_SECRET ?? notifier.appSecret,
+  receiverType: process.env.FEISHU_RECEIVER_TYPE ?? notifier.receiverType,
+  receiverId: process.env.FEISHU_RECEIVER_ID ?? notifier.receiverId
+}
+
+const required = ["appId", "appSecret", "receiverType", "receiverId"]
+const missing = required.filter((key) => !resolved[key])
 
 if (missing.length > 0) {
   console.error(
-    `Missing feishuNotifier fields: ${missing.join(", ")}.\n` +
-      "Add to opencode.json, e.g.:\n" +
+    `Missing Feishu config: ${missing.join(", ")}\.\n` +
+      "Set FEISHU_* env vars or create:\n" +
+      `${notifierConfigFile}\n` +
       JSON.stringify(
         {
-          feishuNotifier: {
-            appId: "YOUR_APP_ID",
-            appSecret: "YOUR_APP_SECRET",
-            receiverType: "user_id",
-            receiverId: "USER_OR_CHAT_ID"
-          }
+          appId: "YOUR_APP_ID",
+          appSecret: "YOUR_APP_SECRET",
+          receiverType: "user_id",
+          receiverId: "USER_OR_CHAT_ID"
         },
         null,
         2
@@ -55,4 +69,5 @@ if (missing.length > 0) {
 }
 
 execFileSync("npx", ["--yes", "opencode-feishu-setup"], { stdio: "inherit" })
-console.log(`Plugin configured in ${configFile}`)
+console.log(`Plugin configured in ${opencodeConfigFile}`)
+
