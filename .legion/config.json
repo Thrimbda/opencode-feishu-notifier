@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "currentTask": "opencode-feishu-plugin",
+  "currentTask": "task-6f25f0e0",
   "settings": {
     "autoRemind": true,
     "remindBeforeReset": true,
@@ -10,9 +10,23 @@
     {
       "id": "opencode-feishu-plugin",
       "name": "opencode-feishu-plugin",
-      "status": "active",
+      "status": "paused",
       "createdAt": "2026-01-13T08:53:04.101Z",
-      "updatedAt": "2026-01-14T09:15:50.201Z"
+      "updatedAt": "2026-01-16T07:57:12.911Z"
+    },
+    {
+      "id": "task-26ba7055",
+      "name": "调试插件初始化问题",
+      "status": "paused",
+      "createdAt": "2026-01-16T07:57:12.911Z",
+      "updatedAt": "2026-01-16T08:39:34.845Z"
+    },
+    {
+      "id": "task-6f25f0e0",
+      "name": "飞书通知消息内容设计",
+      "status": "active",
+      "createdAt": "2026-01-16T08:39:34.845Z",
+      "updatedAt": "2026-01-16T09:00:16.681Z"
     }
   ],
   "pendingProposals": [
@@ -80,6 +94,160 @@
       "decidedAt": "2026-01-13T08:53:04.101Z",
       "decidedBy": "Claude",
       "createdTaskId": "opencode-feishu-plugin"
+    },
+    {
+      "id": "proposal-mkgl4sdj-2b9659",
+      "name": "调试插件初始化问题",
+      "goal": "找出并修复插件安装后不工作、initialized 后无日志输出的根本原因",
+      "rationale": "用户报告插件安装后没有正常工作，在 initialized 之后也没有打印任何日志。这可能是插件注册、初始化逻辑或日志配置的问题，需要系统性地排查。",
+      "points": [
+        "检查插件入口点和导出配置",
+        "验证 hook 注册和初始化逻辑",
+        "确认日志输出是否被正确配置",
+        "测试插件在 OpenCode 中的加载流程",
+        "添加调试日志以追踪问题"
+      ],
+      "scope": [
+        "src/index.ts",
+        "src/hooks.ts",
+        "src/config.ts",
+        "package.json",
+        "插件加载机制",
+        "日志输出配置"
+      ],
+      "phases": [
+        {
+          "name": "问题诊断",
+          "tasks": [
+            {
+              "description": "检查插件入口文件和导出结构",
+              "acceptance": "确认 index.ts 正确导出插件所需的所有内容"
+            },
+            {
+              "description": "检查 hooks.ts 的初始化逻辑",
+              "acceptance": "确认 initialized hook 被正确注册且包含日志输出"
+            },
+            {
+              "description": "检查 package.json 的入口点配置",
+              "acceptance": "确认 main 字段指向正确的入口文件"
+            }
+          ]
+        },
+        {
+          "name": "根因分析",
+          "tasks": [
+            {
+              "description": "分析插件加载机制和 OpenCode 插件规范",
+              "acceptance": "理解插件应该如何被加载和初始化"
+            },
+            {
+              "description": "对比工作的插件示例",
+              "acceptance": "找出当前实现与正常工作插件的差异"
+            }
+          ]
+        },
+        {
+          "name": "问题修复",
+          "tasks": [
+            {
+              "description": "修复识别出的问题",
+              "acceptance": "插件能够正常加载并输出初始化日志"
+            },
+            {
+              "description": "添加调试日志以便未来排查",
+              "acceptance": "关键路径都有适当的日志输出"
+            },
+            {
+              "description": "测试修复后的插件",
+              "acceptance": "插件在 OpenCode 中正常工作并输出预期日志"
+            }
+          ]
+        }
+      ],
+      "proposedBy": "Claude",
+      "proposedAt": "2026-01-16T07:56:50.985Z",
+      "status": "approved",
+      "decidedAt": "2026-01-16T07:57:12.911Z",
+      "decidedBy": "Claude",
+      "createdTaskId": "task-26ba7055"
+    },
+    {
+      "id": "proposal-mkgmn57l-6e59da",
+      "name": "飞书通知消息内容设计",
+      "goal": "为各类事件设计结构化的飞书通知消息内容模板，包含项目信息、事件原因和进度总结",
+      "rationale": "当前飞书通知系统缺少有效的内容模板，发送的消息信息不完整，无法快速了解当前项目状态、事件原因和进度。需要设计标准化的消息格式，使通知更具可读性和实用性，提升团队协作效率。",
+      "points": [
+        "设计标准化的消息模板，支持多种事件类型（闲暇、有问题、需要权限等）",
+        "实现动态内容生成，根据当前上下文自动填充项目名称和进度信息",
+        "定义消息格式规范，确保信息清晰可读",
+        "支持进度报告的自动生成和格式化"
+      ],
+      "scope": [
+        "消息模板设计",
+        "内容生成逻辑",
+        "项目上下文集成",
+        "事件类型枚举"
+      ],
+      "phases": [
+        {
+          "name": "需求分析与设计",
+          "tasks": [
+            {
+              "description": "分析不同事件类型的消息需求",
+              "acceptance": "完成事件类型分类和消息要素定义文档"
+            },
+            {
+              "description": "设计消息模板结构和格式",
+              "acceptance": "确定消息包含的字段和布局方式"
+            }
+          ]
+        },
+        {
+          "name": "模板实现",
+          "tasks": [
+            {
+              "description": "实现各类事件的消息模板",
+              "acceptance": "创建可复用的模板文件，支持参数化替换"
+            },
+            {
+              "description": "实现项目上下文信息提取",
+              "acceptance": "能够获取当前项目名称、分支、工作区信息"
+            }
+          ]
+        },
+        {
+          "name": "进度报告功能",
+          "tasks": [
+            {
+              "description": "实现进度信息收集和总结",
+              "acceptance": "能够获取当前任务状态、完成度等关键信息"
+            },
+            {
+              "description": "实现格式化进度报告",
+              "acceptance": "生成简洁清晰的进度总结文本"
+            }
+          ]
+        },
+        {
+          "name": "集成与测试",
+          "tasks": [
+            {
+              "description": "集成消息内容生成到通知系统",
+              "acceptance": "通知发送时能自动填充消息内容"
+            },
+            {
+              "description": "测试各类事件的消息效果",
+              "acceptance": "验证所有事件类型的消息格式和内容正确性"
+            }
+          ]
+        }
+      ],
+      "proposedBy": "Claude",
+      "proposedAt": "2026-01-16T08:39:07.043Z",
+      "status": "approved",
+      "decidedAt": "2026-01-16T08:39:34.845Z",
+      "decidedBy": "Claude",
+      "createdTaskId": "task-6f25f0e0"
     }
   ]
 }

@@ -6,7 +6,7 @@ import { mapEventToNotification } from "./hooks";
 
 const serviceName = "opencode-feishu-notifier";
 
-export const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
+const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
   let configCache: ReturnType<typeof loadConfigWithSource> | null = null;
   let configError: Error | null = null;
 
@@ -55,7 +55,17 @@ export const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
     event: async ({ event }) => {
       logDebug("Event received", { eventType: event.type });
 
-      const notificationType = mapEventToNotification(event.type);
+      // Check for session.status with idle state
+      let notificationType = mapEventToNotification(event.type);
+
+      // Special handling for session.status events
+      if (
+        event.type === "session.status" &&
+        event.properties?.status?.type === "idle"
+      ) {
+        notificationType = "session_idle";
+      }
+
       if (!notificationType) {
         logDebug("Event ignored", { eventType: event.type });
         return;
@@ -70,10 +80,15 @@ export const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
         return;
       }
 
-      const { text } = buildNotification(notificationType, event);
+      const { text } = await buildNotification(
+        notificationType,
+        event,
+        directory
+      );
       logDebug("Sending Feishu notification", {
         eventType: event.type,
         notificationType,
+        directory,
       });
 
       try {
@@ -89,3 +104,5 @@ export const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
     },
   };
 };
+
+export default FeishuNotifierPlugin;

@@ -42,3 +42,58 @@
 2026-01-14T09:02:39.109Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addFile: .github/workflows/release.yml,success
 2026-01-14T09:08:23.861Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,progress.completed: CI 触发方式改回 push master，并加入版本检查跳过发布,success
 2026-01-14T09:15:50.201Z,legion_update_context,opencode-feishu-plugin,opencode-feishu-plugin,Claude,addDecision: 日志发送改为 fire-and-forget，配置错误不再抛出阻塞 opencode 启动,success
+2026-01-16T07:56:32.485Z,legion_init,opencode-feishu-plugin,opencode-feishu-plugin,Claude,,success
+2026-01-16T07:56:36.467Z,legion_list_tasks,opencode-feishu-plugin,opencode-feishu-plugin,Claude,,success
+2026-01-16T07:56:50.987Z,legion_propose_task,opencode-feishu-plugin,opencode-feishu-plugin,Claude,name: 调试插件初始化问题,success
+2026-01-16T07:57:12.914Z,legion_approve_proposal,task-26ba7055,调试插件初始化问题,Claude,proposalId: proposal-mkgl4sdj-2b9659,success
+2026-01-16T07:57:15.338Z,legion_switch_task,task-26ba7055,调试插件初始化问题,Claude,taskId: task-26ba7055,success
+2026-01-16T07:57:15.855Z,legion_update_tasks,task-26ba7055,调试插件初始化问题,Claude,setCurrentTask: phase 1,success
+2026-01-16T07:57:29.370Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,addDecision: 将插件从具名导出改为默认导出,success
+2026-01-16T07:57:29.748Z,legion_update_tasks,task-26ba7055,调试插件初始化问题,Claude,completeTask: phase 1,success
+2026-01-16T07:57:51.504Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,progress.completed: 识别问题：插件使用具名导出而非默认导出,success
+2026-01-16T07:57:54.458Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,addFile: src/index.ts,success
+2026-01-16T07:59:18.256Z,legion_update_tasks,task-26ba7055,调试插件初始化问题,Claude,setCurrentTask: phase 3,success
+2026-01-16T08:00:40.755Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,progress.completed: 识别问题：插件使用具名导出而非默认导出,success
+2026-01-16T08:00:52.571Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,handoff: 在 OpenCode 中重新加载或重启插件,success
+2026-01-16T08:01:29.606Z,legion_generate_dashboard,task-26ba7055,调试插件初始化问题,Claude,format: markdown,success
+2026-01-16T08:04:30.870Z,legion_update_tasks,task-26ba7055,调试插件初始化问题,Claude,addTask: 设置本地测试环境，无需发布到 npm,success
+2026-01-16T08:06:54.340Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,progress.completed: 识别问题：插件使用具名导出而非默认导出,success
+2026-01-16T08:06:56.973Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,addFile: setup-local-testing.mjs,success
+2026-01-16T08:06:58.514Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,addFile: LOCAL_DEVELOPMENT.md,success
+2026-01-16T08:10:50.530Z,legion_update_tasks,task-26ba7055,调试插件初始化问题,Claude,"addDiscoveredTask: 配置飞书通知所需的 appId, appSecret, receiverType, receiverId",success
+2026-01-16T08:11:15.323Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,addDecision: 修复配置文件结构，移除嵌套的 feishuNotifier 层,success
+2026-01-16T08:11:51.920Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,progress.completed: 识别问题：插件使用具名导出而非默认导出,success
+2026-01-16T08:15:33.978Z,legion_update_tasks,task-26ba7055,调试插件初始化问题,Claude,addDiscoveredTask: 插件初始化成功但没有事件处理和消息推送，需要调试事件监听机制,success
+2026-01-16T08:16:01.987Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,addDecision: 添加调试日志记录所有接收到的事件,success
+2026-01-16T08:16:54.481Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,progress.completed: 识别问题：插件使用具名导出而非默认导出,success
+2026-01-16T08:23:21.305Z,legion_update_tasks,task-26ba7055,调试插件初始化问题,Claude,addTask: 添加新的事件类型支持,success
+2026-01-16T08:24:58.006Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,progress.completed: 识别问题：插件使用具名导出而非默认导出,success
+2026-01-16T08:25:38.796Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,addDecision: 在 session.status 事件中检查 status.type === 'idle',success
+2026-01-16T08:26:02.120Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,handoff: 重启 OpenCode 加载新的事件支持,success
+2026-01-16T08:28:19.040Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,addDecision: 同时支持 permission.asked 和 permission.updated 两个事件,success
+2026-01-16T08:29:23.121Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,progress.completed: 识别问题：插件使用具名导出而非默认导出,success
+2026-01-16T08:31:26.038Z,legion_list_tasks,task-26ba7055,调试插件初始化问题,Claude,,success
+2026-01-16T08:31:28.584Z,legion_update_plan,task-26ba7055,调试插件初始化问题,Claude,,success
+2026-01-16T08:32:07.059Z,legion_update_context,task-26ba7055,调试插件初始化问题,Claude,progress.completed: 修复插件导出问题 (default export),success
+2026-01-16T08:38:57.849Z,legion_create_task,task-26ba7055,调试插件初始化问题,Claude,goal: 为各类事件设计结构化的飞书通知消息内容模板，包含项目信息、事件原因和进度总结,failed
+2026-01-16T08:39:07.047Z,legion_propose_task,task-26ba7055,调试插件初始化问题,Claude,name: 飞书通知消息内容设计,success
+2026-01-16T08:39:34.849Z,legion_approve_proposal,task-6f25f0e0,飞书通知消息内容设计,Claude,proposalId: proposal-mkgmn57l-6e59da,success
+2026-01-16T08:46:04.911Z,legion_update_plan,task-6f25f0e0,飞书通知消息内容设计,Claude,,success
+2026-01-16T08:46:13.442Z,legion_update_context,task-6f25f0e0,飞书通知消息内容设计,Claude,addDecision: 采用三段式消息格式：标题区（项目+事件）+ 原因区（为何通知）+ 进度区（当前状态）,success
+2026-01-16T08:46:16.233Z,legion_update_tasks,task-6f25f0e0,飞书通知消息内容设计,Claude,setCurrentTask: phase 1,success
+2026-01-16T08:48:45.243Z,legion_update_context,task-6f25f0e0,飞书通知消息内容设计,Claude,addFile: .legion/tasks/task-6f25f0e0/plan.md,success
+2026-01-16T08:50:14.108Z,legion_get_status,task-6f25f0e0,飞书通知消息内容设计,Claude,,success
+2026-01-16T08:50:38.977Z,legion_update_tasks,task-6f25f0e0,飞书通知消息内容设计,Claude,completeTask: 分析不同事件类型的消息需求,success
+2026-01-16T08:50:43.948Z,legion_update_tasks,task-6f25f0e0,飞书通知消息内容设计,Claude,completeTask: 设计消息模板结构和格式,success
+2026-01-16T08:50:55.634Z,legion_update_tasks,task-6f25f0e0,飞书通知消息内容设计,Claude,setCurrentTask: 实现各类事件的消息模板,success
+2026-01-16T08:55:40.727Z,legion_update_tasks,task-6f25f0e0,飞书通知消息内容设计,Claude,completeTask: 实现各类事件的消息模板,success
+2026-01-16T08:55:45.897Z,legion_update_tasks,task-6f25f0e0,飞书通知消息内容设计,Claude,completeTask: 实现项目上下文信息提取,success
+2026-01-16T08:55:51.487Z,legion_update_tasks,task-6f25f0e0,飞书通知消息内容设计,Claude,completeTask: 实现进度信息收集和总结,success
+2026-01-16T08:55:57.139Z,legion_update_tasks,task-6f25f0e0,飞书通知消息内容设计,Claude,completeTask: 实现格式化进度报告,success
+2026-01-16T08:58:28.918Z,legion_update_tasks,task-6f25f0e0,飞书通知消息内容设计,Claude,completeTask: 集成消息内容生成到通知系统,success
+2026-01-16T08:58:42.703Z,legion_update_context,task-6f25f0e0,飞书通知消息内容设计,Claude,addFile: src/context/project.ts,success
+2026-01-16T08:58:49.145Z,legion_update_context,task-6f25f0e0,飞书通知消息内容设计,Claude,addFile: src/context/progress.ts,success
+2026-01-16T08:58:56.777Z,legion_update_context,task-6f25f0e0,飞书通知消息内容设计,Claude,addFile: src/feishu/templates.ts,success
+2026-01-16T08:59:02.671Z,legion_update_context,task-6f25f0e0,飞书通知消息内容设计,Claude,addFile: src/types.ts,success
+2026-01-16T08:59:08.723Z,legion_update_context,task-6f25f0e0,飞书通知消息内容设计,Claude,addFile: src/feishu/messages.ts,success
+2026-01-16T09:00:16.682Z,legion_update_tasks,task-6f25f0e0,飞书通知消息内容设计,Claude,completeTask: 测试各类事件的消息效果,success
