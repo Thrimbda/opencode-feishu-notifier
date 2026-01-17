@@ -1,6 +1,7 @@
 import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
+import os from "os";
 import type { ProjectContext } from "../types";
 
 /**
@@ -25,6 +26,7 @@ export async function extractProjectContext(
     workingDir,
     repoUrl: gitInfo.repoUrl,
     isGitRepo: gitInfo.isGitRepo,
+    hostname: os.hostname(),
   };
 }
 
@@ -128,6 +130,7 @@ export function extractProjectContextSync(directory: string): ProjectContext {
     workingDir,
     repoUrl: gitInfo.repoUrl,
     isGitRepo: gitInfo.isGitRepo,
+    hostname: os.hostname(),
   };
 }
 

@@ -150,6 +150,10 @@ function buildTitle(context: MessageContext): string {
     title += ` ${project.branch}`;
   }
 
+  if (project.hostname) {
+    title += ` @${project.hostname}`;
+  }
+
   title += ` | ${eventTitle}`;
 
   return title;

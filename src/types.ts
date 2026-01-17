@@ -15,6 +15,8 @@ export interface ProjectContext {
   repoUrl?: string;
   /** 是否 Git 仓库 */
   isGitRepo: boolean;
+  /** 机器 hostname，用于区分不同的机器 */
+  hostname?: string;
 }
 
 /**
