@@ -39,7 +39,7 @@ try {
   // In real OpenCode, this would use the actual import mechanism
   // For testing, we'll verify the structure
   const { readFileSync } = await import("node:fs")
-  const content = readFileSync(path.join(__dirname, "src/index.ts"), "utf8")
+  const content = readFileSync(path.join(__dirname, "..", "src/index.ts"), "utf8")
   
   // Verify it's a default export
   if (!content.includes("export default")) {
@@ -56,7 +56,7 @@ try {
 console.log("Step 2: Verifying plugin initialization logic...")
 try {
   const { readFileSync } = await import("node:fs")
-  const content = readFileSync(path.join(__dirname, "src/index.ts"), "utf8")
+  const content = readFileSync(path.join(__dirname, "..", "src/index.ts"), "utf8")
   
   // Check for initialization log - this should be called when plugin loads
   const initLogPattern = /log\s*\(\s*["']info["']\s*,\s*["'][^"']*initialized[^"']*["']\s*\)/
@@ -74,7 +74,7 @@ try {
 console.log("Step 3: Checking event handler registration...")
 try {
   const { readFileSync } = await import("node:fs")
-  const content = readFileSync(path.join(__dirname, "src/index.ts"), "utf8")
+  const content = readFileSync(path.join(__dirname, "..", "src/index.ts"), "utf8")
   
   // Check for event handler in return object
   if (!content.includes("event: async")) {

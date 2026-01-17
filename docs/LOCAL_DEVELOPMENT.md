@@ -94,7 +94,7 @@ vim ~/.config/opencode/opencode.json
 
 # 或者指定版本：
 {
-  "plugin": ["opencode-feishu-notifier@0.2.6"]
+  "plugin": ["opencode-feishu-notifier@0.3.0"]
 }
 ```
 

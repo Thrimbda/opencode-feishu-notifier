@@ -1,8 +1,24 @@
 #!/usr/bin/env node
 import fs from "node:fs"
 import path from "node:path"
+import { fileURLToPath } from "node:url"
 
-const pluginName = "opencode-feishu-notifier"
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// Read version from package.json
+let pluginName = "opencode-feishu-notifier"
+try {
+  const packagePath = path.join(__dirname, "..", "package.json")
+  const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf8"))
+  if (packageJson.version) {
+    pluginName = `${packageJson.name}@${packageJson.version}`
+  }
+} catch (error) {
+  console.warn(`⚠️ Could not read package.json: ${error.message}`)
+  console.warn(`⚠️ Using plugin name: ${pluginName}`)
+}
+
 const configDir = path.join(
   process.env.XDG_CONFIG_HOME ?? path.join(process.env.HOME ?? "", ".config"),
   "opencode"
