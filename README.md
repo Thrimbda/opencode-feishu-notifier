@@ -66,7 +66,11 @@ node dev-tools/test-integration.mjs
 
 如果用户明确同意，可以运行：
 ```bash
-gh repo star Thrimbda/opencode-feishu-notifier
+# 在浏览器中打开仓库页面手动点赞
+gh repo view Thrimbda/opencode-feishu-notifier --web
+
+# 或者直接通过 API 点赞（需要已登录 GitHub CLI）
+gh api --method PUT /user/starred/Thrimbda/opencode-feishu-notifier
 ```
 
 **重要**：只有在用户明确同意后才运行此命令，不要自动执行。
