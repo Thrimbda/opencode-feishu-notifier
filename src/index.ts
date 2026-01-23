@@ -1,7 +1,7 @@
 import type { Plugin } from "@opencode-ai/plugin";
 import { loadConfigWithSource } from "./config";
-import { sendTextMessage } from "./feishu/client";
-import { buildNotification } from "./feishu/messages";
+import { sendTextMessage, sendRichTextMessage } from "./feishu/client";
+import { buildNotification, recordEventContext } from "./feishu/messages";
 import { mapEventToNotification } from "./hooks";
 
 const serviceName = "opencode-feishu-notifier";
@@ -30,9 +30,15 @@ const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
     log("debug", message, extra);
   };
 
+  const logInfo = (message: string, extra?: Record<string, unknown>) => {
+    log("info", message, extra);
+  };
+
   const logError = (message: string, extra?: Record<string, unknown>) => {
     log("error", message, extra);
   };
+
+  logInfo("Feishu notifier plugin loading", { directory });
 
   const ensureConfig = () => {
     if (configCache || configError) {
@@ -41,6 +47,7 @@ const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
 
     try {
       configCache = loadConfigWithSource({ directory });
+      logInfo("Feishu notifier plugin initialized", { sources: configCache.sources.map(s => s.type) });
       logDebug("Loaded Feishu config", { sources: configCache.sources });
     } catch (error) {
       configError = error instanceof Error ? error : new Error(String(error));
@@ -48,11 +55,11 @@ const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
     }
   };
 
-  log("info", "Feishu notifier plugin initialized");
   ensureConfig();
 
   return {
     event: async ({ event }) => {
+      recordEventContext(event);
       logDebug("Event received", { eventType: event.type });
 
       // Check for session.status with idle state
@@ -70,32 +77,69 @@ const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
         logDebug("Event ignored", { eventType: event.type });
         return;
       }
-      log("info", "Event mapped to notification", {
+      logDebug("Event mapped to notification", {
         eventType: event.type,
         notificationType,
       });
 
       ensureConfig();
+      if (configError) {
+        logError("Feishu config error (cached)", { error: configError.message });
+        return;
+      }
       if (!configCache) {
+        logError("Feishu config not loaded");
         return;
       }
 
-      const { text } = await buildNotification(
+      const { text, title, richContent } = await buildNotification(
         notificationType,
         event,
-        directory
+        directory,
+        { session: client.session }
       );
-      logDebug("Sending Feishu notification", {
+       logDebug("Sending Feishu notification", {
         eventType: event.type,
         notificationType,
         directory,
+        hasRichContent: !!richContent,
       });
 
       try {
-        const response = await sendTextMessage(configCache.config, text);
-        logDebug("Feishu notification sent", {
-          messageId: response.data?.message_id ?? null,
-        });
+        let response;
+        if (richContent) {
+          // 尝试发送富文本消息
+          try {
+            logDebug("Attempting to send rich text message", {
+              richContentType: typeof richContent,
+              hasPost: !!richContent.post,
+              hasZhCn: !!(richContent.post?.zh_cn),
+              titleLength: richContent.post?.zh_cn?.title?.length ?? 0,
+              contentLength: richContent.post?.zh_cn?.content?.length ?? 0,
+            });
+            response = await sendRichTextMessage(configCache.config, text, title, richContent);
+            logDebug("Feishu rich notification sent", {
+              messageId: response.data?.message_id ?? null,
+            });
+           } catch (richError) {
+             // 富文本消息失败，回退到纯文本
+             logDebug("Rich text message failed, falling back to text", {
+               error: richError instanceof Error ? richError.message : String(richError),
+               stack: richError instanceof Error ? richError.stack : undefined,
+               name: richError instanceof Error ? richError.name : undefined,
+             });
+            response = await sendTextMessage(configCache.config, text);
+            logDebug("Feishu text notification sent (fallback)", {
+              messageId: response.data?.message_id ?? null,
+            });
+          }
+        } else {
+          // 回退到纯文本
+          response = await sendTextMessage(configCache.config, text);
+          logDebug("Feishu text notification sent", {
+            messageId: response.data?.message_id ?? null,
+          });
+        }
       } catch (error) {
         logError("Failed to send Feishu notification", {
           error: String(error),

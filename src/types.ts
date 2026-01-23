@@ -56,6 +56,12 @@ export interface MessageContext {
   eventPayload?: unknown;
   /** 事件原始类型 */
   originalEventType?: string;
+  /** 会话 ID */
+  sessionID?: string;
+  /** 会话标题 */
+  sessionTitle?: string;
+  /** 触发事件的 Agent 名称 */
+  agentName?: string;
 }
 
 /**
@@ -86,6 +92,8 @@ export interface ReasonConfig {
   description: string;
   /** 是否需要具体操作说明 */
   requiresAction: boolean;
+  /** 事件类型对应的 emoji */
+  emoji?: string;
 }
 
 /**

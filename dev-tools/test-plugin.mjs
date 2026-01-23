@@ -15,7 +15,7 @@ console.log("🧪 Testing Feishu Notifier Plugin...\n")
 // Test 1: Check if module can be imported
 console.log("Test 1: Checking module import...")
 try {
-  const pluginPath = path.join(__dirname, "src/index.ts")
+  const pluginPath = path.join(__dirname, "..", "src/index.ts")
   console.log(`  Plugin path: ${pluginPath}`)
   
   // For TypeScript files, we need to use a different approach
@@ -52,7 +52,7 @@ try {
 console.log("Test 2: Checking plugin structure...")
 try {
   const { readFileSync } = await import("node:fs")
-  const content = readFileSync(path.join(__dirname, "src/index.ts"), "utf8")
+  const content = readFileSync(path.join(__dirname, "..", "src/index.ts"), "utf8")
   
   // Check for required imports
   const hasPluginImport = /import.*Plugin.*from.*@opencode-ai\/plugin/.test(content)
@@ -80,7 +80,7 @@ try {
 console.log("Test 3: Checking package.json...")
 try {
   const { readFileSync } = await import("node:fs")
-  const pkg = JSON.parse(readFileSync(path.join(__dirname, "package.json"), "utf8"))
+  const pkg = JSON.parse(readFileSync(path.join(__dirname, "..", "package.json"), "utf8"))
   
   console.log(`  Name: ${pkg.name}`)
   console.log(`  Version: ${pkg.version}`)
