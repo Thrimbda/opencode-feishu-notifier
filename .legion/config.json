@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "currentTask": "task-6f25f0e0",
+  "currentTask": "readme",
   "settings": {
     "autoRemind": true,
     "remindBeforeReset": true,
@@ -24,9 +24,23 @@
     {
       "id": "task-6f25f0e0",
       "name": "飞书通知消息内容设计",
-      "status": "active",
+      "status": "paused",
       "createdAt": "2026-01-16T08:39:34.845Z",
-      "updatedAt": "2026-01-16T09:00:16.681Z"
+      "updatedAt": "2026-03-21T13:50:06.426Z"
+    },
+    {
+      "id": "subagent",
+      "name": "抑制 subagent 退出通知噪音",
+      "status": "paused",
+      "createdAt": "2026-03-21T13:50:06.426Z",
+      "updatedAt": "2026-03-21T14:27:59.419Z"
+    },
+    {
+      "id": "readme",
+      "name": "README 增补重启提示与飞书机器人指南",
+      "status": "active",
+      "createdAt": "2026-03-21T14:27:59.419Z",
+      "updatedAt": "2026-03-21T16:50:02.242Z"
     }
   ],
   "pendingProposals": [
@@ -248,6 +262,130 @@
       "decidedAt": "2026-01-16T08:39:34.845Z",
       "decidedBy": "Claude",
       "createdTaskId": "task-6f25f0e0"
+    },
+    {
+      "id": "proposal-mn0dxip0-3971ff",
+      "name": "抑制 subagent 退出通知噪音",
+      "goal": "调整飞书通知触发逻辑，仅在主会话进入 idle 时发送闲暇通知，避免 subagent 退出时产生噪音。",
+      "rationale": "当前插件会在 `session.status` 进入 idle 时统一发送通知，导致 subagent 退出也会触发飞书消息，形成噪音。该任务需要建立明确的任务契约、实现最小范围修复、补充验证与 PR 说明，符合 LegionMind 的多步骤交付流程。",
+      "points": [
+        "梳理 `session.status` idle 通知的触发上下文，区分主会话与 subagent 会话。",
+        "在不影响权限、提问、确认等高价值通知的前提下，收紧 idle 通知条件。",
+        "产出测试、评审、walkthrough 与 PR body，支持直接进入 Review。"
+      ],
+      "scope": [
+        "src/index.ts",
+        "src/feishu/messages.ts",
+        "README.md",
+        ".legion/tasks/subagent/"
+      ],
+      "phases": [
+        {
+          "name": "阶段 1 - 设计",
+          "tasks": [
+            {
+              "description": "确认 subagent 退出通知的触发路径并确定最小修复方案",
+              "acceptance": "plan.md 写明问题定义、约束、风险分级和 design-lite 方案"
+            }
+          ]
+        },
+        {
+          "name": "阶段 2 - 实现",
+          "tasks": [
+            {
+              "description": "修改通知过滤逻辑，避免 subagent 退出触发 idle 通知",
+              "acceptance": "主会话 idle 仍可通知，subagent 退出不再发送通知"
+            },
+            {
+              "description": "按需更新相关文档或消息说明",
+              "acceptance": "行为变化有对应说明，避免文档与实现不一致"
+            }
+          ]
+        },
+        {
+          "name": "阶段 3 - 验证与报告",
+          "tasks": [
+            {
+              "description": "执行测试与代码评审，记录结果",
+              "acceptance": "生成 test-report.md 与 review-code.md，必要时生成 review-security.md"
+            },
+            {
+              "description": "生成 walkthrough 与 PR body",
+              "acceptance": "docs/report-walkthrough.md 与 docs/pr-body.md 已落盘"
+            }
+          ]
+        }
+      ],
+      "proposedBy": "Claude",
+      "proposedAt": "2026-03-21T13:50:02.725Z",
+      "status": "approved",
+      "decidedAt": "2026-03-21T13:50:06.426Z",
+      "decidedBy": "Claude",
+      "createdTaskId": "subagent"
+    },
+    {
+      "id": "proposal-mn0fa7or-d9ebfd",
+      "name": "README 增补重启提示与飞书机器人指南",
+      "goal": "更新 README，补充 LegionMind 来源说明、插件重启提示，以及完整的飞书机器人配置/授权/成员/发布指南，并产出可直接用于 PR 的任务文档。",
+      "rationale": "用户明确要求以 LegionMind 完成一次端到端交付，并在 README 中新增多处说明与操作指引；该工作包含文档调研、任务契约、实现、验证、评审与 PR 产物生成，适合独立建立新任务以避免污染现有 active task。",
+      "points": [
+        "在 README 前几行说明本插件使用 github:thrimbda/legion-mind vibe coding 得到",
+        "在 agent 自动配置指南中明确提示配置插件后需要重启",
+        "新增飞书机器人配置指南，覆盖机器人配置、权限授予、用户添加与版本发布流程",
+        "按 LegionMind 流程落盘计划、验证、评审和 PR 描述"
+      ],
+      "scope": [
+        "README.md",
+        ".legion/tasks/<new-task-id>/**",
+        ".legion/playbook.md（如产生可复用约定时）"
+      ],
+      "phases": [
+        {
+          "name": "阶段 1 - 计划与设计",
+          "tasks": [
+            {
+              "description": "建立任务契约并确认 README 现状与文档语言",
+              "acceptance": "plan.md 记录问题定义、验收标准、允许 Scope、风险分级与设计入口"
+            },
+            {
+              "description": "产出 design-lite 并确定 README 的新增章节结构",
+              "acceptance": "plan.md 的 Design Index 与 Phase Map 可指导实现"
+            }
+          ]
+        },
+        {
+          "name": "阶段 2 - 实现 README 更新",
+          "tasks": [
+            {
+              "description": "更新 README 开头来源说明与自动配置重启提示",
+              "acceptance": "README 前言与自动配置章节包含所需说明"
+            },
+            {
+              "description": "新增飞书机器人配置指南",
+              "acceptance": "README 包含机器人配置、权限、用户添加与版本发布的可执行步骤"
+            }
+          ]
+        },
+        {
+          "name": "阶段 3 - 验证与报告",
+          "tasks": [
+            {
+              "description": "执行验证并生成测试/评审报告",
+              "acceptance": "docs/test-report.md 与 docs/review-code.md 已生成，必要时含 review-security.md"
+            },
+            {
+              "description": "生成 walkthrough 与 PR body",
+              "acceptance": "docs/report-walkthrough.md 与 docs/pr-body.md 已生成，可直接用于 review"
+            }
+          ]
+        }
+      ],
+      "proposedBy": "Claude",
+      "proposedAt": "2026-03-21T14:27:54.605Z",
+      "status": "approved",
+      "decidedAt": "2026-03-21T14:27:59.419Z",
+      "decidedBy": "Claude",
+      "createdTaskId": "readme"
     }
   ]
 }

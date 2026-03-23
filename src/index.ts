@@ -1,7 +1,11 @@
 import type { Plugin } from "@opencode-ai/plugin";
 import { loadConfigWithSource } from "./config";
 import { sendTextMessage, sendRichTextMessage } from "./feishu/client";
-import { buildNotification, recordEventContext } from "./feishu/messages";
+import {
+  buildNotification,
+  recordEventContext,
+  shouldSendSessionIdleNotification,
+} from "./feishu/messages";
 import { mapEventToNotification } from "./hooks";
 
 const serviceName = "opencode-feishu-notifier";
@@ -70,6 +74,17 @@ const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
         event.type === "session.status" &&
         event.properties?.status?.type === "idle"
       ) {
+        const shouldSendIdle = await shouldSendSessionIdleNotification(event, {
+          session: client.session,
+        });
+
+        if (!shouldSendIdle) {
+          logDebug("Idle notification skipped for child session", {
+            eventType: event.type,
+          });
+          return;
+        }
+
         notificationType = "session_idle";
       }
 

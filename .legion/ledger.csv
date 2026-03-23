@@ -97,3 +97,38 @@
 2026-01-16T08:59:02.671Z,legion_update_context,task-6f25f0e0,飞书通知消息内容设计,Claude,addFile: src/types.ts,success
 2026-01-16T08:59:08.723Z,legion_update_context,task-6f25f0e0,飞书通知消息内容设计,Claude,addFile: src/feishu/messages.ts,success
 2026-01-16T09:00:16.682Z,legion_update_tasks,task-6f25f0e0,飞书通知消息内容设计,Claude,completeTask: 测试各类事件的消息效果,success
+2026-03-21T13:48:30.752Z,legion_get_status,task-6f25f0e0,飞书通知消息内容设计,Claude,,success
+2026-03-21T13:49:04.592Z,legion_list_tasks,task-6f25f0e0,飞书通知消息内容设计,Claude,,success
+2026-03-21T13:49:47.963Z,legion_create_task,task-6f25f0e0,飞书通知消息内容设计,Claude,goal: 调整飞书通知触发逻辑，仅在主会话进入 idle 时发送闲暇通知，避免 subagent 退出时产生噪音。,failed
+2026-03-21T13:50:02.726Z,legion_propose_task,task-6f25f0e0,飞书通知消息内容设计,Claude,name: 抑制 subagent 退出通知噪音,success
+2026-03-21T13:50:06.431Z,legion_approve_proposal,subagent,抑制 subagent 退出通知噪音,Claude,proposalId: proposal-mn0dxip0-3971ff,success
+2026-03-21T13:50:10.808Z,legion_switch_task,subagent,抑制 subagent 退出通知噪音,Claude,taskId: subagent,success
+2026-03-21T13:53:27.160Z,legion_update_tasks,subagent,抑制 subagent 退出通知噪音,Claude,completeTask: phase 1,success
+2026-03-21T13:53:27.174Z,legion_update_context,subagent,抑制 subagent 退出通知噪音,Claude,addDecision: 对 `session_idle` 采用根会话过滤：优先读取事件中的父会话信息，必要时再通过 `client.session.get()` 检查 `parentID`。,success
+2026-03-21T13:53:27.177Z,legion_update_tasks,subagent,抑制 subagent 退出通知噪音,Claude,setCurrentTask: phase 2,success
+2026-03-21T14:05:56.924Z,legion_update_context,subagent,抑制 subagent 退出通知噪音,Claude,addDecision: 会话元数据缓存仅在字段值已定义时更新，并在只有 `sessionID`、没有其它元数据时跳过写入。,success
+2026-03-21T14:05:56.925Z,legion_update_context,subagent,抑制 subagent 退出通知噪音,Claude,addFile: src/index.ts,success
+2026-03-21T14:05:56.932Z,legion_update_context,subagent,抑制 subagent 退出通知噪音,Claude,addFile: README.md,success
+2026-03-21T14:05:56.933Z,legion_update_context,subagent,抑制 subagent 退出通知噪音,Claude,addFile: src/feishu/messages.ts,success
+2026-03-21T14:06:05.142Z,legion_update_context,subagent,抑制 subagent 退出通知噪音,Claude,addFile: .legion/tasks/subagent/docs/test-report.md,success
+2026-03-21T14:06:05.143Z,legion_update_context,subagent,抑制 subagent 退出通知噪音,Claude,addFile: .legion/tasks/subagent/docs/review-code.md,success
+2026-03-21T14:06:05.152Z,legion_update_context,subagent,抑制 subagent 退出通知噪音,Claude,addFile: .legion/tasks/subagent/docs/pr-body.md,success
+2026-03-21T14:06:05.152Z,legion_update_context,subagent,抑制 subagent 退出通知噪音,Claude,addFile: .legion/tasks/subagent/docs/report-walkthrough.md,success
+2026-03-21T14:06:23.041Z,legion_get_status,subagent,抑制 subagent 退出通知噪音,Claude,,success
+2026-03-21T14:27:17.614Z,legion_get_status,subagent,抑制 subagent 退出通知噪音,Claude,,success
+2026-03-21T14:27:40.236Z,legion_create_task,subagent,抑制 subagent 退出通知噪音,Claude,goal: 更新 README，补充 LegionMind 来源说明、插件重启提示，以及完整的飞书机器人配置/授权/成员/发布指南，并产出可直接用于 PR 的任务文档。,failed
+2026-03-21T14:27:54.606Z,legion_propose_task,subagent,抑制 subagent 退出通知噪音,Claude,name: README 增补重启提示与飞书机器人指南,success
+2026-03-21T14:27:59.426Z,legion_approve_proposal,readme,README 增补重启提示与飞书机器人指南,Claude,proposalId: proposal-mn0fa7or-d9ebfd,success
+2026-03-21T14:28:03.737Z,legion_get_status,readme,README 增补重启提示与飞书机器人指南,Claude,,success
+2026-03-21T14:30:11.844Z,legion_update_context,readme,README 增补重启提示与飞书机器人指南,Claude,addDecision: 本任务按 Low 风险 design-lite 执行，不单独产出 RFC。,success
+2026-03-21T14:30:11.851Z,legion_update_tasks,readme,README 增补重启提示与飞书机器人指南,Claude,completeTask: phase 1,success
+2026-03-21T14:30:11.852Z,legion_update_tasks,readme,README 增补重启提示与飞书机器人指南,Claude,completeTask: phase 1,success
+2026-03-21T14:30:11.853Z,legion_update_tasks,readme,README 增补重启提示与飞书机器人指南,Claude,setCurrentTask: phase 2,success
+2026-03-21T14:36:28.091Z,legion_get_status,readme,README 增补重启提示与飞书机器人指南,Claude,,success
+2026-03-21T14:36:38.915Z,legion_update_context,readme,README 增补重启提示与飞书机器人指南,Claude,addFile: README.md,success
+2026-03-21T14:36:49.957Z,legion_update_context,readme,README 增补重启提示与飞书机器人指南,Claude,addFile: .legion/tasks/readme/docs/test-report.md,success
+2026-03-21T14:36:49.957Z,legion_update_context,readme,README 增补重启提示与飞书机器人指南,Claude,addFile: .legion/tasks/readme/docs/review-code.md,success
+2026-03-21T14:36:49.957Z,legion_update_context,readme,README 增补重启提示与飞书机器人指南,Claude,addDecision: 本次验证采用 README 与仓库事实的一致性核对，不运行自动化测试。,success
+2026-03-21T14:38:03.336Z,legion_update_context,readme,README 增补重启提示与飞书机器人指南,Claude,addFile: .legion/tasks/readme/docs/report-walkthrough.md,success
+2026-03-21T14:38:03.336Z,legion_update_context,readme,README 增补重启提示与飞书机器人指南,Claude,addFile: .legion/tasks/readme/docs/pr-body.md,success
+2026-03-21T16:50:02.245Z,legion_update_context,readme,README 增补重启提示与飞书机器人指南,Claude,progress.completed: 将 README 顶部的 legion-mind 来源说明改为可点击的 GitHub 链接,success

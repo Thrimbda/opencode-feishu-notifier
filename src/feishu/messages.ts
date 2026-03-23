@@ -37,6 +37,7 @@ type EventPayload = {
 
 type SessionContext = {
   sessionID?: string;
+  parentID?: string;
   sessionTitle?: string;
   agentName?: string;
 };
@@ -45,14 +46,21 @@ type SessionClient = {
   session?: {
     get?: (options: { path: { id: string } }) => Promise<{
       data?: {
+        parentID?: string;
         title?: string;
       };
     }>;
   };
 };
 
-const sessionTitleCache = new Map<string, string>();
-const sessionAgentCache = new Map<string, string>();
+type SessionMetadata = {
+  loaded?: boolean;
+  parentID?: string;
+  sessionTitle?: string;
+  agentName?: string;
+};
+
+const sessionMetadataCache = new Map<string, SessionMetadata>();
 
 function asRecord(value: unknown): Record<string, unknown> | undefined {
   if (value && typeof value === "object") {
@@ -63,6 +71,33 @@ function asRecord(value: unknown): Record<string, unknown> | undefined {
 
 function readString(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;
+}
+
+function readSessionMetadataCache(sessionID: string): SessionMetadata {
+  return sessionMetadataCache.get(sessionID) ?? {};
+}
+
+function writeSessionMetadataCache(sessionID: string, metadata: SessionMetadata): void {
+  const cached = readSessionMetadataCache(sessionID);
+  const nextMetadata: SessionMetadata = { ...cached };
+
+  if (metadata.loaded !== undefined) {
+    nextMetadata.loaded = metadata.loaded;
+  }
+
+  if (metadata.parentID !== undefined) {
+    nextMetadata.parentID = metadata.parentID;
+  }
+
+  if (metadata.sessionTitle !== undefined) {
+    nextMetadata.sessionTitle = metadata.sessionTitle;
+  }
+
+  if (metadata.agentName !== undefined) {
+    nextMetadata.agentName = metadata.agentName;
+  }
+
+  sessionMetadataCache.set(sessionID, nextMetadata);
 }
 
 function extractEventPayload(event?: EventPayload): unknown {
@@ -102,6 +137,15 @@ function extractSessionContext(event?: EventPayload): SessionContext {
     readString(info?.id) ??
     readString(part?.sessionID);
 
+  const parentID =
+    readString(properties?.parentID) ??
+    readString(properties?.parentId) ??
+    readString(info?.parentID) ??
+    readString(info?.parentId) ??
+    readString(info?.parentSessionID) ??
+    readString(part?.parentID) ??
+    readString(part?.parentId);
+
   const sessionTitle = readString(info?.title);
 
   const agentName =
@@ -112,6 +156,7 @@ function extractSessionContext(event?: EventPayload): SessionContext {
 
   return {
     sessionID,
+    parentID,
     sessionTitle,
     agentName,
   };
@@ -126,15 +171,15 @@ async function resolveSessionContext(
     return baseContext;
   }
 
-  const cachedTitle = sessionTitleCache.get(baseContext.sessionID);
-  const cachedAgent = sessionAgentCache.get(baseContext.sessionID);
+  const cachedMetadata = readSessionMetadataCache(baseContext.sessionID);
   const mergedContext = {
     ...baseContext,
-    sessionTitle: baseContext.sessionTitle ?? cachedTitle,
-    agentName: baseContext.agentName ?? cachedAgent,
+    parentID: baseContext.parentID ?? cachedMetadata.parentID,
+    sessionTitle: baseContext.sessionTitle ?? cachedMetadata.sessionTitle,
+    agentName: baseContext.agentName ?? cachedMetadata.agentName,
   };
 
-  if (mergedContext.sessionTitle) {
+  if (mergedContext.sessionTitle && (mergedContext.parentID || cachedMetadata.loaded)) {
     return mergedContext;
   }
 
@@ -144,13 +189,19 @@ async function resolveSessionContext(
         path: { id: baseContext.sessionID },
       });
       const title = response?.data?.title;
-      if (title) {
-        sessionTitleCache.set(baseContext.sessionID, title);
-        return {
-          ...mergedContext,
-          sessionTitle: title,
-        };
-      }
+      const parentID = response?.data?.parentID;
+
+      writeSessionMetadataCache(baseContext.sessionID, {
+        loaded: true,
+        sessionTitle: title,
+        parentID,
+      });
+
+      return {
+        ...mergedContext,
+        parentID: parentID ?? mergedContext.parentID,
+        sessionTitle: title ?? mergedContext.sessionTitle,
+      };
     } catch {
       // 忽略会话信息获取失败
     }
@@ -165,13 +216,45 @@ export function recordEventContext(event?: EventPayload): void {
     return;
   }
 
-  if (context.sessionTitle) {
-    sessionTitleCache.set(context.sessionID, context.sessionTitle);
+  if (
+    context.parentID === undefined &&
+    context.sessionTitle === undefined &&
+    context.agentName === undefined
+  ) {
+    return;
   }
 
-  if (context.agentName) {
-    sessionAgentCache.set(context.sessionID, context.agentName);
+  writeSessionMetadataCache(context.sessionID, {
+    parentID: context.parentID,
+    sessionTitle: context.sessionTitle,
+    agentName: context.agentName,
+  });
+}
+
+export async function shouldSendSessionIdleNotification(
+  event?: EventPayload,
+  client?: SessionClient
+): Promise<boolean> {
+  const baseContext = extractSessionContext(event);
+  if (baseContext.parentID) {
+    return false;
   }
+
+  if (!baseContext.sessionID) {
+    return true;
+  }
+
+  const cachedMetadata = readSessionMetadataCache(baseContext.sessionID);
+  if (cachedMetadata.parentID) {
+    return false;
+  }
+
+  if (cachedMetadata.loaded) {
+    return true;
+  }
+
+  const sessionContext = await resolveSessionContext(event, client);
+  return !sessionContext.parentID;
 }
 
 // 保持向后兼容的标题映射
