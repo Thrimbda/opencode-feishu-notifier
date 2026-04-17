@@ -236,12 +236,32 @@ export async function shouldSendSessionIdleNotification(
   client?: SessionClient
 ): Promise<boolean> {
   const baseContext = extractSessionContext(event);
-  if (baseContext.parentID) {
-    return false;
+  if (!baseContext.sessionID) {
+    return !baseContext.parentID;
   }
 
-  if (!baseContext.sessionID) {
-    return true;
+  if (client?.session?.get) {
+    try {
+      const response = await client.session.get({
+        path: { id: baseContext.sessionID },
+      });
+      const title = response?.data?.title;
+      const parentID = response?.data?.parentID;
+
+      writeSessionMetadataCache(baseContext.sessionID, {
+        loaded: true,
+        sessionTitle: title,
+        parentID,
+      });
+
+      return !parentID;
+    } catch {
+      // 忽略会话信息获取失败，回退到事件字段和缓存
+    }
+  }
+
+  if (baseContext.parentID) {
+    return false;
   }
 
   const cachedMetadata = readSessionMetadataCache(baseContext.sessionID);
@@ -253,8 +273,7 @@ export async function shouldSendSessionIdleNotification(
     return true;
   }
 
-  const sessionContext = await resolveSessionContext(event, client);
-  return !sessionContext.parentID;
+  return true;
 }
 
 // 保持向后兼容的标题映射

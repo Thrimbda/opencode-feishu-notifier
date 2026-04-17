@@ -26,7 +26,7 @@
 ## 假设
 
 - OpenCode 的子会话可以通过 `sessionID` 对应的会话元数据识别，优先依据 `parentID` 判断是否为子会话。
-- 如果事件负载中已带父会话信息，可直接使用；否则允许通过 `client.session.get()` 补充查询。
+- 当事件携带 `sessionID` 时，优先通过 `client.session.get()` 查询会话详情，并依据返回的 `parentID` 判断是否为子会话；查询失败时再回退到事件字段。
 - 无需为本次修复新增用户配置项，默认静默过滤子会话 idle 通知即可满足需求。
 
 ## 约束
@@ -73,9 +73,9 @@
 
 在 idle 事件被映射为 `session_idle` 之前，先判断触发事件所属会话是否为子会话：
 
-1. 从事件中提取 `sessionID` 与可能存在的 `parentID`。
-2. 如果事件自身能明确表明存在父会话，则直接视为 subagent，跳过 idle 通知。
-3. 如果事件未携带父会话信息，则使用 `client.session.get({ id: sessionID })` 查询会话元数据，并检查 `parentID`。
+1. 从事件中提取 `sessionID`，用于定位当前会话。
+2. 如果拿到 `sessionID`，优先使用 `client.session.get({ id: sessionID })` 查询会话元数据，并检查返回结果中的 `parentID`。
+3. 只有在查询不可用或失败时，才回退使用事件自身携带的 `parentID` 与本地缓存信息。
 4. 仅当会话为根会话时才继续发送 `session_idle`；其它事件类型不受影响。
 
 ### 为什么这样做
