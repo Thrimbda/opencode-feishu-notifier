@@ -13,6 +13,9 @@
 - 完成代码评审，`review-code.md` 结论为 PASS，仅剩非阻塞建议。
 - 生成 `test-report.md`、`report-walkthrough.md`、`pr-body.md` 交付文档。
 - 补充 follow-up：idle 过滤现在在有 sessionID 时优先调用 client.session.get()，直接依据返回的 parentID 判断是否为子会话。
+- 已将本机 OpenCode 插件来源切回本地源码路径 `/Users/c1/Work/opencode-feishu-notifier`。
+- 已将子会话过滤范围扩大到所有映射到飞书通知的事件类型，而不再只限于 session idle。
+- 已执行 `npm run typecheck`，结果 PASS。
 
 
 ### 🟡 进行中
@@ -48,6 +51,8 @@
 | 对 `session_idle` 采用根会话过滤：优先读取事件中的父会话信息，必要时再通过 `client.session.get()` 检查 `parentID`。 | 基于父子会话关系判断比依赖标题或 agent 名称更稳健，且可以把改动限制在发送决策入口。 | 依赖 `agentName` 或标题中的 subagent 关键词过滤；新增用户配置项控制是否通知子会话。 | 2026-03-21 |
 | 会话元数据缓存仅在字段值已定义时更新，并在只有 `sessionID`、没有其它元数据时跳过写入。 | idle 事件可能缺少 `parentID`；如果允许 `undefined` 回写缓存，会把已识别出的子会话误判回未知状态，导致 subagent idle 通知重新放行。 | 继续使用对象展开覆盖缓存；在事件入口完全不缓存会话元数据、每次都走 `client.session.get()`。 | 2026-03-21 |
 | 将 session_idle 的子会话判定顺序收紧为优先调用 client.session.get()，再基于返回的 parentID 决定是否发送。 | 满足最新需求，避免事件负载字段不完整或与真实会话状态不一致时造成误判。 | 继续优先依赖事件中的 parentID，再在缺失时查询 session.get。 | 2026-04-17 |
+| 本轮验证优先使用本地源码路径而非 npm 包。 | 当前 npm 版本号未提升，已发布包不能保证包含最新修复；本地路径可直接验证当前工作区实现。 | 继续使用 npm 版本并先发布新版本后再验证。 | 2026-04-20 |
+| 将子会话过滤统一前移到插件入口，在 notificationType 确定后、发送前统一执行。 | 这样可以覆盖 permission、question、confirmation、command args、idle 等全部通知，而不需要在每个分支分别补过滤逻辑。 | 继续仅在 session_idle 分支做过滤；在每种通知类型分支分别增加重复判断。 | 2026-04-20 |
 
 ---
 
@@ -55,12 +60,13 @@
 
 **下次继续从这里开始：**
 
-1. 如需补齐文档，可把 plan/context 中旧的“优先事件字段”表述统一改成“优先 session.get 查询”。
+1. 重启 OpenCode，使本地源码版插件重新加载生效。
+2. 如果后续发现某类 subagent 事件缺少 sessionID/parentID，可针对该事件结构补充字段提取规则。
 
 **注意事项：**
 
-- `npm run typecheck` 已执行，结果见本次工具输出。
+- 当前 `~/.config/opencode/opencode.json` 已指向本地源码路径。
 
 ---
 
-*最后更新: 2026-04-17 22:54 by Claude*
+*最后更新: 2026-04-20 14:03 by Claude*

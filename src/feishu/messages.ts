@@ -231,13 +231,13 @@ export function recordEventContext(event?: EventPayload): void {
   });
 }
 
-export async function shouldSendSessionIdleNotification(
+export async function isSubagentSession(
   event?: EventPayload,
   client?: SessionClient
 ): Promise<boolean> {
   const baseContext = extractSessionContext(event);
   if (!baseContext.sessionID) {
-    return !baseContext.parentID;
+    return Boolean(baseContext.parentID);
   }
 
   if (client?.session?.get) {
@@ -254,26 +254,25 @@ export async function shouldSendSessionIdleNotification(
         parentID,
       });
 
-      return !parentID;
+      return Boolean(parentID);
     } catch {
       // 忽略会话信息获取失败，回退到事件字段和缓存
     }
   }
 
   if (baseContext.parentID) {
-    return false;
-  }
-
-  const cachedMetadata = readSessionMetadataCache(baseContext.sessionID);
-  if (cachedMetadata.parentID) {
-    return false;
-  }
-
-  if (cachedMetadata.loaded) {
     return true;
   }
 
-  return true;
+  const cachedMetadata = readSessionMetadataCache(baseContext.sessionID);
+  return Boolean(cachedMetadata.parentID);
+}
+
+export async function shouldSendSessionIdleNotification(
+  event?: EventPayload,
+  client?: SessionClient
+): Promise<boolean> {
+  return !(await isSubagentSession(event, client));
 }
 
 // 保持向后兼容的标题映射

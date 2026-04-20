@@ -134,3 +134,5 @@
 2026-03-21T16:50:02.245Z,legion_update_context,readme,README 增补重启提示与飞书机器人指南,Claude,progress.completed: 将 README 顶部的 legion-mind 来源说明改为可点击的 GitHub 链接,success
 2026-04-17T14:54:13.429Z,legion_get_status,subagent,抑制 subagent 退出通知噪音,Claude,,success
 2026-04-17T14:54:58.845Z,legion_update_context,subagent,抑制 subagent 退出通知噪音,Claude,addDecision: 将 session_idle 的子会话判定顺序收紧为优先调用 client.session.get()，再基于返回的 parentID 决定是否发送。,success
+2026-04-20T06:02:15.721Z,legion_update_context,subagent,抑制 subagent 退出通知噪音,Claude,addDecision: 本轮验证优先使用本地源码路径而非 npm 包。,success
+2026-04-20T06:03:38.982Z,legion_update_context,subagent,抑制 subagent 退出通知噪音,Claude,addDecision: 将子会话过滤统一前移到插件入口，在 notificationType 确定后、发送前统一执行。,success

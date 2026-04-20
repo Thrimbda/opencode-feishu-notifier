@@ -3,8 +3,8 @@ import { loadConfigWithSource } from "./config";
 import { sendTextMessage, sendRichTextMessage } from "./feishu/client";
 import {
   buildNotification,
+  isSubagentSession,
   recordEventContext,
-  shouldSendSessionIdleNotification,
 } from "./feishu/messages";
 import { mapEventToNotification } from "./hooks";
 
@@ -74,17 +74,6 @@ const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
         event.type === "session.status" &&
         event.properties?.status?.type === "idle"
       ) {
-        const shouldSendIdle = await shouldSendSessionIdleNotification(event, {
-          session: client.session,
-        });
-
-        if (!shouldSendIdle) {
-          logDebug("Idle notification skipped for child session", {
-            eventType: event.type,
-          });
-          return;
-        }
-
         notificationType = "session_idle";
       }
 
@@ -92,6 +81,18 @@ const FeishuNotifierPlugin: Plugin = async ({ client, directory }) => {
         logDebug("Event ignored", { eventType: event.type });
         return;
       }
+
+      const isChildSession = await isSubagentSession(event, {
+        session: client.session,
+      });
+      if (isChildSession) {
+        logDebug("Notification skipped for child session", {
+          eventType: event.type,
+          notificationType,
+        });
+        return;
+      }
+
       logDebug("Event mapped to notification", {
         eventType: event.type,
         notificationType,
